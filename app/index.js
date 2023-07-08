@@ -13,3 +13,5 @@ app.listen(8000, () => {
 app.use(function (req, res) {
   res.status(404);
 });
+
+module.exports = app;
