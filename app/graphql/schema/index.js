@@ -1,6 +1,7 @@
 const graphql = require('graphql');
+const resolver = require('../resolver');
 
-const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList, GraphQLID } = graphql;
 
 const dummyPost = [
   {
@@ -14,10 +15,11 @@ const dummyPost = [
 const PostType = new GraphQLObjectType({
   name: 'Post',
   fields: () => ({
-    id: { type: GraphQLString },
+    id: { type: GraphQLID },
     title: { type: GraphQLString },
     body: { type: GraphQLString },
     slug: { type: GraphQLString },
+    created_at: { type: GraphQLString },
   }),
 });
 
@@ -26,15 +28,15 @@ const Query = new GraphQLObjectType({
   fields: {
     post: {
       type: PostType,
-      args: { id: { type: GraphQLString } },
+      args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return dummyPost.filter((el) => el.id === args.id)[0];
+        return resolver.post(args.id);
       },
     },
     posts: {
       type: new GraphQLList(PostType),
       resolve(parent, args) {
-        return dummyPost;
+        return resolver.posts();
       },
     },
   },
@@ -43,7 +45,7 @@ const Query = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
   name: 'MutationType',
   fields: {
-    addPost: {
+    createPost: {
       type: PostType,
       args: {
         title: { type: GraphQLString },
@@ -51,7 +53,7 @@ const Mutation = new GraphQLObjectType({
         slug: { type: GraphQLString },
       },
       resolve(parent, args) {
-        return dummyPost[0];
+        return resolver.createPost(args);
       },
     },
   },
