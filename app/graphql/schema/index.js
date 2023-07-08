@@ -3,15 +3,6 @@ const resolver = require('../resolver');
 
 const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList, GraphQLID } = graphql;
 
-const dummyPost = [
-  {
-    id: '1',
-    title: 'Title ABC',
-    body: 'body post',
-    slug: 'title-abc',
-  },
-];
-
 const PostType = new GraphQLObjectType({
   name: 'Post',
   fields: () => ({
